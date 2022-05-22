@@ -15,6 +15,7 @@ import sys
 import copy
 import csv
 import time
+from tqdm import tqdm
 # from itertools import izip
 from datetime import datetime
 
@@ -68,7 +69,8 @@ csvfile_2.close()
 
 ascii_offset = 64
 
-for row in spamreader:  # the rows are "CaseID,ActivityID,CompleteTimestamp,related_objects"
+print("Preprocessing1...")
+for row in tqdm(spamreader):  # the rows are "CaseID,ActivityID,CompleteTimestamp,related_objects"
     #    t = row[2]
     t = time.strptime(row[2], "%Y-%m-%d %H:%M:%S")  # creates a datetime object from row[2]
     t = datetime.fromtimestamp(time.mktime(t))
@@ -250,7 +252,8 @@ numlines = 0
 Pcasestarttime = None
 Plasteventtime = None
 Stime = datetime.min
-for row in spamreader:
+print("Preprocessing2...")
+for row in tqdm(spamreader):
     #    t = row[2]
     t = time.strptime(row[2], "%Y-%m-%d %H:%M:%S")
     t = datetime.fromtimestamp(time.mktime(t))
