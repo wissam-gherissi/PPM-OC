@@ -84,9 +84,9 @@ print('divisor2: {}'.format(divisor2))
 indices = np.random.permutation(numlines-1)
 elems_per_fold = int(round(numlines / 3))
 
-idx1 = indices[:elems_per_fold]
-idx2 = indices[elems_per_fold:2*elems_per_fold]
-idx3 = indices[2*elems_per_fold:]
+idx1 = indices[:2 * elems_per_fold]
+idx2 = indices[2 * elems_per_fold:4 * elems_per_fold]
+idx3 = indices[4 * elems_per_fold:]
 
 fold1 = list(itemgetter(*idx1)(lines))
 fold1_c = list(itemgetter(*idx1)(caseids))

@@ -172,11 +172,11 @@ print('divisor5: {}'.format(divisor5))
 # separate training data into 3 parts
 
 indices = np.random.permutation(numlines-1)
-elems_per_fold = int(round(numlines / 3))
+elems_per_fold = int(round(numlines / 5))
 
-idx1 = indices[:elems_per_fold]
-idx2 = indices[elems_per_fold:2*elems_per_fold]
-idx3 = indices[2*elems_per_fold:]
+idx1 = indices[:2 * elems_per_fold]
+idx2 = indices[2 * elems_per_fold:4 * elems_per_fold]
+idx3 = indices[4 * elems_per_fold:]
 
 fold1 = list(itemgetter(*idx1)(lines))
 fold1_t = list(itemgetter(*idx1)(Ptimeseqs))
@@ -491,13 +491,13 @@ for i, sentence in enumerate(sentences):
 print('Build model...')
 main_input = Input(shape=(maxlen, num_features), name='main_input')
 # train a 2-layer LSTM with one shared layer
-l1 = LSTM(100, implementation=2, kernel_initializer='glorot_uniform', return_sequences=True, dropout=0.2)(
+l1 = LSTM(500, implementation=2, kernel_initializer='glorot_uniform', return_sequences=True, dropout=0.2)(
     main_input)  # the shared layer
 b1 = BatchNormalization()(l1)
-l2_1 = LSTM(100, implementation=2, kernel_initializer='glorot_uniform', return_sequences=False, dropout=0.2)(
+l2_1 = LSTM(500, implementation=2, kernel_initializer='glorot_uniform', return_sequences=False, dropout=0.2)(
     b1)  # the layer specialized in activity prediction
 b2_1 = BatchNormalization()(l2_1)
-l2_2 = LSTM(100, implementation=2, kernel_initializer='glorot_uniform', return_sequences=False, dropout=0.2)(
+l2_2 = LSTM(500, implementation=2, kernel_initializer='glorot_uniform', return_sequences=False, dropout=0.2)(
     b1)  # the layer specialized in time prediction
 b2_2 = BatchNormalization()(l2_2)
 act_output = Dense(len(target_chars), activation='softmax', kernel_initializer='glorot_uniform', name='act_output')(
@@ -509,10 +509,10 @@ model = Model(inputs=[main_input], outputs=[act_output, time_output])
 # opt = nadam(learning_rate=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-08, clipvalue=3)
 
 model.compile(loss={'act_output': 'categorical_crossentropy', 'time_output': 'mae'}, optimizer='nadam')
-early_stopping = EarlyStopping(monitor='val_loss', patience=25)
+early_stopping = EarlyStopping(monitor='val_loss', patience=50)
 model_checkpoint = ModelCheckpoint('output_files/models/model_{epoch:02d}-{val_loss:.2f}.h5', monitor='val_loss',
                                    verbose=0, save_best_only=True, save_weights_only=False, mode='auto')
-lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=15, verbose=0, mode='auto', min_delta=0.0001,
+lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=25, verbose=0, mode='auto', min_delta=0.0001,
                                cooldown=0, min_lr=0)
 
 model.fit(X, {'act_output': y_a, 'time_output': y_t}, validation_split=0.2, verbose=2,

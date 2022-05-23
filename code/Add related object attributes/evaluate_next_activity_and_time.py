@@ -16,6 +16,7 @@ from sklearn import metrics
 import time
 from datetime import datetime, timedelta
 from collections import Counter
+from tqdm import tqdm
 
 eventlog = "orders_el_new.csv"
 secondary_el = "items_el_new.csv"
@@ -57,7 +58,7 @@ Stimes3 = []
 numlines = 0
 Pcasestarttime = None
 Plasteventtime = None
-for row in spamreader:
+for row in tqdm(spamreader):
     t = time.strptime(row[2], "%Y-%m-%d %H:%M:%S")
     t = datetime.fromtimestamp(time.mktime(t))
     if row[0] != lastcase:
@@ -147,9 +148,9 @@ print('divisor5: {}'.format(divisor5))
 indices = np.random.permutation(numlines-1)
 elems_per_fold = int(round(numlines / 3))
 
-idx1 = indices[:elems_per_fold]
-idx2 = indices[elems_per_fold:2*elems_per_fold]
-idx3 = indices[2*elems_per_fold:]
+idx1 = indices[:2 * elems_per_fold]
+idx2 = indices[2 * elems_per_fold:4 * elems_per_fold]
+idx3 = indices[4 * elems_per_fold:]
 
 fold1 = list(itemgetter(*idx1)(lines))
 fold1_c = list(itemgetter(*idx1)(caseids))
@@ -221,7 +222,7 @@ Stime = datetime.min
 csvfile = open('../../data/%s' % eventlog, 'r')
 spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
 next(spamreader, None)  # skip the headers
-for row in spamreader:
+for row in tqdm(spamreader):
     t = time.strptime(row[2], "%Y-%m-%d %H:%M:%S")
     t = datetime.fromtimestamp(time.mktime(t))
     if row[0] != lastcase:
