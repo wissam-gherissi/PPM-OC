@@ -82,7 +82,7 @@ divisor2 = np.mean([item for sublist in Ptimeseqs2 for item in sublist])
 print('divisor2: {}'.format(divisor2))
 
 indices = np.random.permutation(numlines-1)
-elems_per_fold = int(round(numlines / 3))
+elems_per_fold = int(round(numlines / 5))
 
 idx1 = indices[:2 * elems_per_fold]
 idx2 = indices[2 * elems_per_fold:4 * elems_per_fold]
