@@ -4,7 +4,7 @@ from operator import itemgetter
 
 from keras.models import Model
 from keras.layers.core import Dense
-from keras.layers.recurrent import LSTM
+from keras.layers import LSTM
 from keras.layers import Input
 
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
