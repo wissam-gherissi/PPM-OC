@@ -3,7 +3,6 @@ from __future__ import division
 import random
 from operator import itemgetter
 import tensorflow as tf
-tf.debugging.set_log_device_placement(True)
 from tensorflow.python.keras.models import load_model
 import csv
 import copy

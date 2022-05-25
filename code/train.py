@@ -2,7 +2,6 @@ from __future__ import print_function, division
 
 from operator import itemgetter
 import tensorflow as tf
-tf.debugging.set_log_device_placement(True)
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras.layers.core import Dense
 from tensorflow.python.keras.layers import LSTM
