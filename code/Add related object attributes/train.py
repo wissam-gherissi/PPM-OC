@@ -1,7 +1,8 @@
 from __future__ import print_function, division
 
 from operator import itemgetter
-
+tensorflow.debugging.set_log_device_placement(True)
+import tensorflow as tf
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras.layers.core import Dense
 from tensorflow.python.keras.layers import LSTM
@@ -487,33 +488,34 @@ for i, sentence in enumerate(sentences):
     y_t[i] = next_t / divisor
     np.set_printoptions(threshold=sys.maxsize)
 
-# build the model: 
-print('Build model...')
-main_input = Input(shape=(maxlen, num_features), name='main_input')
-# train a 2-layer LSTM with one shared layer
-l1 = LSTM(500, implementation=2, kernel_initializer='glorot_uniform', return_sequences=True, dropout=0.2)(
-    main_input)  # the shared layer
-b1 = BatchNormalization()(l1)
-l2_1 = LSTM(500, implementation=2, kernel_initializer='glorot_uniform', return_sequences=False, dropout=0.2)(
-    b1)  # the layer specialized in activity prediction
-b2_1 = BatchNormalization()(l2_1)
-l2_2 = LSTM(500, implementation=2, kernel_initializer='glorot_uniform', return_sequences=False, dropout=0.2)(
-    b1)  # the layer specialized in time prediction
-b2_2 = BatchNormalization()(l2_2)
-act_output = Dense(len(target_chars), activation='softmax', kernel_initializer='glorot_uniform', name='act_output')(
-    b2_1)
-time_output = Dense(1, kernel_initializer='glorot_uniform', name='time_output')(b2_2)
+# build the model:
+with tf.device('/GPU:1'):
+    print('Build model...')
+    main_input = Input(shape=(maxlen, num_features), name='main_input')
+    # train a 2-layer LSTM with one shared layer
+    l1 = LSTM(500, implementation=2, kernel_initializer='glorot_uniform', return_sequences=True, dropout=0.2)(
+        main_input)  # the shared layer
+    b1 = BatchNormalization()(l1)
+    l2_1 = LSTM(500, implementation=2, kernel_initializer='glorot_uniform', return_sequences=False, dropout=0.2)(
+        b1)  # the layer specialized in activity prediction
+    b2_1 = BatchNormalization()(l2_1)
+    l2_2 = LSTM(500, implementation=2, kernel_initializer='glorot_uniform', return_sequences=False, dropout=0.2)(
+        b1)  # the layer specialized in time prediction
+    b2_2 = BatchNormalization()(l2_2)
+    act_output = Dense(len(target_chars), activation='softmax', kernel_initializer='glorot_uniform', name='act_output')(
+        b2_1)
+    time_output = Dense(1, kernel_initializer='glorot_uniform', name='time_output')(b2_2)
 
-model = Model(inputs=[main_input], outputs=[act_output, time_output])
+    model = Model(inputs=[main_input], outputs=[act_output, time_output])
 
-# opt = nadam(learning_rate=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-08, clipvalue=3)
+    # opt = nadam(learning_rate=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-08, clipvalue=3)
 
-model.compile(loss={'act_output': 'categorical_crossentropy', 'time_output': 'mae'}, optimizer='nadam')
-early_stopping = EarlyStopping(monitor='val_loss', patience=50)
-model_checkpoint = ModelCheckpoint('output_files/models/model_{epoch:02d}-{val_loss:.2f}.h5', monitor='val_loss',
-                                   verbose=0, save_best_only=True, save_weights_only=False, mode='auto')
-lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=25, verbose=0, mode='auto', min_delta=0.0001,
-                               cooldown=0, min_lr=0)
+    model.compile(loss={'act_output': 'categorical_crossentropy', 'time_output': 'mae'}, optimizer='nadam')
+    early_stopping = EarlyStopping(monitor='val_loss', patience=50)
+    model_checkpoint = ModelCheckpoint('output_files/models/model_{epoch:02d}-{val_loss:.2f}.h5', monitor='val_loss',
+                                       verbose=0, save_best_only=True, save_weights_only=False, mode='auto')
+    lr_reducer = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=25, verbose=0, mode='auto', min_delta=0.0001,
+                                   cooldown=0, min_lr=0)
 
-model.fit(X, {'act_output': y_a, 'time_output': y_t}, validation_split=0.2, verbose=2,
-          callbacks=[early_stopping, model_checkpoint, lr_reducer], batch_size=maxlen, epochs=500)
+    model.fit(X, {'act_output': y_a, 'time_output': y_t}, validation_split=0.2, verbose=2,
+              callbacks=[early_stopping, model_checkpoint, lr_reducer], batch_size=maxlen, epochs=500)
