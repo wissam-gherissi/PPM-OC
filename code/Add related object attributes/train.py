@@ -2,12 +2,14 @@ from __future__ import print_function, division
 
 from operator import itemgetter
 
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers.core import Dense
-from tensorflow.keras.layers import LSTM
-from tensorflow.keras.layers import Input
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
-from tensorflow.keras.layers import BatchNormalization
+import tensorflow as tf
+
+from tf.keras.models import Model
+from tf.keras.layers.core import Dense
+from tf.keras.layers import LSTM
+from tf.keras.layers import Input
+from tf.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from tf.keras.layers import BatchNormalization
 from collections import Counter
 import numpy as np
 import random
