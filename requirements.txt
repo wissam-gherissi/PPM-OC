@@ -7,3 +7,4 @@ scikit-learn~=1.0.2
 unicodecsv~=0.14.1
 matplotlib~=3.5.1
 tqdm~=4.64.0
+tensorflow
