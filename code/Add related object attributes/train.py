@@ -2,12 +2,12 @@ from __future__ import print_function, division
 
 from operator import itemgetter
 
-from keras.models import Model
-from keras.layers.core import Dense
-from keras.layers import LSTM
-from keras.layers import Input
-from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
-from keras.layers import BatchNormalization
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers.core import Dense
+from tensorflow.keras.layers import LSTM
+from tensorflow.keras.layers import Input
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from tensorflow.keras.layers import BatchNormalization
 from collections import Counter
 import numpy as np
 import random
