@@ -1,13 +1,14 @@
 from __future__ import print_function, division
 
 from operator import itemgetter
+
 import tensorflow as tf
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras.layers.core import Dense
 from tensorflow.python.keras.layers import LSTM
 from tensorflow.python.keras.layers import Input
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
-from tensorflow.python.keras.layers import BatchNormalization
+
 from collections import Counter
 import numpy as np
 import random
@@ -494,13 +495,13 @@ with tf.device('/GPU:1'):
     # train a 2-layer LSTM with one shared layer
     l1 = LSTM(500, implementation=2, kernel_initializer='glorot_uniform', return_sequences=True, dropout=0.2)(
         main_input)  # the shared layer
-    b1 = BatchNormalization()(l1)
+    b1 = tf.keras.layers.BatchNormalization()(l1)
     l2_1 = LSTM(500, implementation=2, kernel_initializer='glorot_uniform', return_sequences=False, dropout=0.2)(
         b1)  # the layer specialized in activity prediction
-    b2_1 = BatchNormalization()(l2_1)
+    b2_1 = tf.keras.layers.BatchNormalization()(l2_1)
     l2_2 = LSTM(500, implementation=2, kernel_initializer='glorot_uniform', return_sequences=False, dropout=0.2)(
         b1)  # the layer specialized in time prediction
-    b2_2 = BatchNormalization()(l2_2)
+    b2_2 = tf.keras.layers.BatchNormalization()(l2_2)
     act_output = Dense(len(target_chars), activation='softmax', kernel_initializer='glorot_uniform', name='act_output')(
         b2_1)
     time_output = Dense(1, kernel_initializer='glorot_uniform', name='time_output')(b2_2)
