@@ -10,7 +10,7 @@
       <excludeFolder url="file://$MODULE_DIR$/venv/Scripts" />
       <excludeFolder url="file://$MODULE_DIR$/venv/share" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.9 (PPM-OC)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

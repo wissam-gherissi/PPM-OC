@@ -1,5 +1,5 @@
 numpy~=1.19
-keras~=2.8.0
+keras>=2.8.0
 six~=1.16.0
 Distance~=0.1.3
 jellyfish~=0.9.0

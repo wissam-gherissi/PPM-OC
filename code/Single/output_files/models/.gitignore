@@ -1,0 +1,6 @@
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
+!model_orders_filtered_50-1.44.h5
+!model_packages_complete_60-1.29.h5
