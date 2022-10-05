@@ -21,7 +21,7 @@ from datetime import datetime
 from numpy.compat import unicode
 from six import unichr
 
-eventlog = "orders_complete"
+eventlog = "items_filtered"
 
 np.random.seed(42)
 
